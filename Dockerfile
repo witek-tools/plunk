@@ -1,5 +1,5 @@
 # Base Stage
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
 WORKDIR /app
 
@@ -8,16 +8,24 @@ COPY . .
 ARG NEXT_PUBLIC_API_URI=PLUNK_API_URI
 
 RUN yarn install --network-timeout 1000000
-RUN yarn build:shared
+RUN yarn generate
+RUN yarn workspace @plunk/shared build
 RUN yarn workspace @plunk/api build
 RUN yarn workspace @plunk/dashboard build
+RUN yarn workspace @plunk/smtp-server build
 
 # Final Stage
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
-RUN apk add --no-cache bash nginx
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
+    nginx-full \
+    libssl-dev \
+    libstdc++6 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=base /app/packages/api/dist /app/packages/api/
 COPY --from=base /app/packages/dashboard/.next /app/packages/dashboard/.next
@@ -25,11 +33,12 @@ COPY --from=base /app/packages/dashboard/public /app/packages/dashboard/public
 COPY --from=base /app/node_modules /app/node_modules
 COPY --from=base /app/packages/shared /app/packages/shared
 COPY --from=base /app/prisma /app/prisma
+COPY --from=base /app/packages/smtp-server/dist /app/packages/smtp-server
 COPY deployment/nginx.conf /etc/nginx/nginx.conf
 COPY deployment/entry.sh deployment/replace-variables.sh /app/
 
 RUN chmod +x /app/entry.sh /app/replace-variables.sh
 
-EXPOSE 3000 4000 5000
+EXPOSE 3000 4000 5000 25 587
 
 CMD ["sh", "/app/entry.sh"]

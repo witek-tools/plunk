@@ -24,9 +24,11 @@
 	},
 	"scripts": {
 		"dev:api": "yarn workspace @plunk/api dev",
+		"dev:smtp-server": "yarn workspace @plunk/smtp-server dev",
 		"dev:dashboard": "yarn workspace @plunk/dashboard dev",
 		"dev:shared": "yarn workspace @plunk/shared dev",
 		"build:api": "yarn build:shared && yarn workspace @plunk/api build",
+		"build:smtp-server": "yarn build:shared && yarn workspace @plunk/smtp-server build",
 		"build:dashboard": "yarn build:shared && yarn workspace @plunk/dashboard build",
 		"build:shared": "yarn generate && yarn workspace @plunk/shared build",
 		"clean": "rimraf node_modules yarn.lock && yarn add lerna -DW && lerna run clean",

@@ -1,0 +1,31 @@
+{
+  "name": "@plunk/smtp-server",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child src/app.ts",
+    "start": "node ./dist/app.js",
+    "build": "tsc",
+    "clean": "rimraf node_modules dist .turbo"
+  },
+  "devDependencies": {
+    "@types/mailparser": "^3",
+    "@types/node": "^22.10.2",
+    "@types/signale": "^1.4.7",
+    "@types/smtp-server": "^3",
+    "cross-env": "^7.0.3",
+    "prisma": "^5.17.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@plunk/node": "^3.0.3",
+    "@plunk/shared": "^1.0.0",
+    "@prisma/client": "^5.17.0",
+    "dotenv": "^16.4.5",
+    "mailparser": "^3.7.2",
+    "signale": "^1.4.0",
+    "smtp-server": "^3.13.6"
+  }
+}
